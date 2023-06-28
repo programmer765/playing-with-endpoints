@@ -30,9 +30,10 @@ connection.connect((err) => {
 
 export const createContact = async (req, res) => {
   try {
-    const data = req.body;
+    let data = req.body;
     let result;
     if (data.data_store === "CRM") {
+      delete data.data_store;
       await axios
         .post(
           `https://${process.env.DOMAIN}.myfreshworks.com/crm/sales/api/contacts`,
@@ -157,7 +158,6 @@ export const updateContact = async (req, res) => {
           if (err) {
             reject(err);
           } else {
-            console.log(res);
             resolve(res);
           }
         });
@@ -193,7 +193,7 @@ export const deleteContact = async (req, res) => {
             },
           }
         )
-        .then((response) => console.log(response.data))
+        .then(response)
         .catch((error) => {
           throw error;
         });
@@ -208,9 +208,11 @@ export const deleteContact = async (req, res) => {
           }
         });
       });
-      await getResult.then(value).catch((error) => {
-        throw error;
-      });
+      await getResult
+        .then((value) => "Success")
+        .catch((error) => {
+          throw error;
+        });
     }
 
     return res
